@@ -1534,70 +1534,86 @@
    </div>
 </section>
     
-    <!-- Contact Section -->
-    <section id="contact" class="contact">
-        <div class="container">
-            <div class="section-title">
-                <h2>Get In Touch</h2>
+   <!-- Contact Section -->
+<section id="contact" class="contact">
+  <div class="container">
+    <div class="section-title">
+      <h2>Get In Touch</h2>
+    </div>
+    <div class="contact-container">
+      <div class="contact-wrapper">
+        <!-- Contact Info -->
+        <div class="contact-info">
+          <h3>Let's Talk</h3>
+          <p>Feel free to reach out to me for any opportunities, collaborations, or just to say hello!</p>
+          <div class="contact-details">
+            <div class="contact-item">
+              <i class="fas fa-phone"></i>
+              <span>336-862-5961</span>
             </div>
-            <div class="contact-container">
-                <div class="contact-wrapper">
-                    <div class="contact-info">
-                        <h3>Let's Talk</h3>
-                        <p>Feel free to reach out to me for any opportunities, collaborations, or just to say hello!</p>
-                        <div class="contact-details">
-                            <div class="contact-item">
-                                <i class="fas fa-phone"></i>
-                                <span>336-862-5961</span>
-                            </div>
-                            <div class="contact-item">
-                                <i class="fas fa-envelope"></i>
-                                <span>shirishakb@gmail.com</span>
-                            </div>
-                            <div class="contact-item">
-                                <i class="fas fa-map-marker-alt"></i>
-                                <span>Winston-Salem, NC 27107</span>
-                            </div>
-                        </div>
-                        <div class="social-links">
-                            <a href="https://www.linkedin.com/in/korukonda-bhattaru-shirisha-656925326/" target="_blank"><i class="fab fa-linkedin-in"></i></a>
-                            <a href="https://github.com/Shirishakb" target="_blank"><i class="fab fa-github"></i></a>
-                        </div>
-                    </div>
-                    <div class="contact-form">
-                        <h3>Send Me a Message</h3>
-                        <form action="https://formspree.io/f/xblkkbqk" method="POST">
-                            <div class="form-group">
-                                <label>
-                                    Your Name:
-                                    <input type="text" name="name" class="form-control" required>
-                                </label>
-                            </div>
-                            <div class="form-group">
-                                <label>
-                                    Your Email:
-                                    <input type="email" name="email" class="form-control" required>
-                                </label>
-                            </div>
-                            <div class="form-group">
-                                <label>
-                                    Subject:
-                                    <input type="text" name="subject" class="form-control">
-                                </label>
-                            </div>
-                            <div class="form-group">
-                                <label>
-                                    Your Message:
-                                    <textarea name="message" class="form-control" required></textarea>
-                                </label>
-                            </div>
-                            <button type="submit" class="submit-btn">Send Message</button>
-                        </form>
-                    </div>
-                </div>
+            <div class="contact-item">
+              <i class="fas fa-envelope"></i>
+              <span>shirishakb@gmail.com</span>
             </div>
+            <div class="contact-item">
+              <i class="fas fa-map-marker-alt"></i>
+              <span>Winston-Salem, NC 27107</span>
+            </div>
+          </div>
+          <div class="social-links">
+            <a href="https://www.linkedin.com/in/korukonda-bhattaru-shirisha-656925326/" target="_blank">
+              <i class="fab fa-linkedin-in"></i>
+            </a>
+            <a href="https://github.com/Shirishakb" target="_blank">
+              <i class="fab fa-github"></i>
+            </a>
+          </div>
         </div>
-    </section>
+
+        <!-- Contact Form -->
+        <div class="contact-form">
+          <h3>Send Me a Message</h3>
+          <form id="contactForm" action="https://formspree.io/f/xblkkbqk" method="POST">
+            <div class="form-group">
+              <label>
+                Your Name:
+                <input type="text" name="name" class="form-control" required>
+              </label>
+            </div>
+            <div class="form-group">
+              <label>
+                Your Email:
+                <input type="email" name="email" class="form-control" required>
+              </label>
+            </div>
+            <div class="form-group">
+              <label>
+                Subject:
+                <input type="text" name="subject" class="form-control">
+              </label>
+            </div>
+            <div class="form-group">
+              <label>
+                Your Message:
+                <textarea name="message" class="form-control" required></textarea>
+              </label>
+            </div>
+
+            <!-- Anti-bot field (hidden) -->
+            <input type="text" name="_gotcha" style="display: none">
+
+            <button type="submit" class="submit-btn">Send Message</button>
+          </form>
+
+          <!-- Success message placeholder -->
+          <div id="formSuccessMsg" style="display:none; color: green; margin-top: 15px; font-weight: bold;">
+            Message sent successfully! ✅
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
     <!-- Footer -->
     <footer>
@@ -1764,16 +1780,36 @@
         createParticles();
         
         // Form submission
-        const contactForm = document.getElementById('contactForm');
-        
-        contactForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            
-            // Here you'd typically handle form submission with AJAX
-            // For demo purposes, we'll just show a success message
-            alert('Thank you for your message! I will get back to you soon.');
-            contactForm.reset();
-        });
+         const contactForm = document.getElementById('contactForm');
+  const successMsg = document.getElementById('formSuccessMsg');
+
+  contactForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const formData = new FormData(contactForm);
+
+    try {
+      const response = await fetch(contactForm.action, {
+        method: contactForm.method,
+        body: formData,
+        headers: {
+          'Accept': 'application/json'
+        }
+      });
+
+      if (response.ok) {
+        contactForm.reset();
+        successMsg.style.display = 'block';
+        setTimeout(() => {
+          successMsg.style.display = 'none';
+        }, 4000);
+      } else {
+        alert('Something went wrong. Please try again.');
+      }
+    } catch (error) {
+      alert('There was a problem submitting the form. Please try again later.');
+    }
+  });
         
         // Smooth scrolling for navigation links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
@@ -1800,4 +1836,5 @@
 </body>
 
 </html>
+
 
